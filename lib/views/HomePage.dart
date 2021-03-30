@@ -2,7 +2,9 @@ import 'dart:collection';
 
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:helpy/Commons.dart';
+import 'package:helpy/networking/ApiServices.dart';
 import 'package:helpy/views/AddNewNeeded.dart';
 import 'package:helpy/views/Login.dart';
 import 'package:helpy/views/MoreOptions.dart';
@@ -22,6 +24,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+
 
   int _selectedPage= 2;
 
@@ -43,7 +47,15 @@ List<Widget> pages=<Widget>[
 
 
   CurvedNavigationBarState navBarState ;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getProfilData();
+    getCurrentLocation();
 
+
+  }
 
 
   @override
@@ -110,6 +122,21 @@ List<Widget> pages=<Widget>[
       );
 
 
+  }
+
+  void getProfilData() {
+      ApiServices.getProfileData(Commons.USERTOKEN);
+  }
+
+  void getCurrentLocation() {
+    Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation)
+        .then((Position position) {
+      setState(() {
+       // _currentPosition = position;
+        Commons.currentPosition=position;
+       // print("lat is ${_currentPosition.latitude}");
+      });
+    });
   }
 }
 

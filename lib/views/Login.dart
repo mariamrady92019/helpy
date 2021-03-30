@@ -231,16 +231,17 @@ class _LoginState extends State<Login> {
                                                     //request  done ok but error massege
                                                     //gologin false
                                                     print('null');
-                                                    ApiServices.loginResponse.msg==null? Toast.show(
+                                                  if(ApiServices.loginResponse.msg==null) {
+                                                     Toast.show(
                                                         "حاول مرة اخري",
                                                         context,
                                                         duration: Toast.LENGTH_LONG,
-                                                        gravity: Toast.BOTTOM):
+                                                        gravity: Toast.BOTTOM);}else{
                                                     Toast.show(
                                                   ApiServices.loginResponse.msg,
                                                             context,
                                               duration: Toast.LENGTH_LONG,
-                                                         gravity: Toast.BOTTOM);
+                                                         gravity: Toast.BOTTOM);}
 
 
                                                   }

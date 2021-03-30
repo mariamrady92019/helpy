@@ -50,8 +50,12 @@ class _MapPageState extends State<MapPage> {
      ApiServices.getAllNeededHelp(Commons.USERTOKEN).then((value) => Commons.allNeededResponse=value);
    }
 
+   if(Commons.currentPosition==null){
      _getCurrentLocation();
 
+  }else{
+     _currentPosition=Commons.currentPosition;
+   }
     log("init");
     print("init");
 

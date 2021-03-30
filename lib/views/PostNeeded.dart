@@ -6,6 +6,7 @@ import 'package:helpy/Commons.dart';
 import 'package:helpy/networking/models/AllNeededResponse.dart';
 import 'package:helpy/views/NeededPostDetails.dart';
 import 'package:hexcolor/hexcolor.dart';
+//import 'package:intl/intl.dart';
 
 import 'HomePage.dart';
 
@@ -72,9 +73,15 @@ final Data dataObject ;
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text(dataObject==null?"":dataObject.title, style: TextStyle(color: Commons.textblack,
-                              fontSize: 18,
-                              fontFamily: 'Tajawal'),),
+                          Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: Container(
+                              width: MediaQuery.of(context).size.width*0.4,
+                              child: Text(dataObject==null?"":dataObject.title, style: TextStyle(color: Commons.textblack,
+                                  fontSize: 18,
+                                  fontFamily: 'Tajawal'),),
+                            ),
+                          ),
                           Padding(
                             padding: const EdgeInsets.only(left:40.0),
                             child: Row(

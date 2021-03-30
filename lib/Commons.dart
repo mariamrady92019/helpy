@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
 
+import 'networking/ProfileDataResponse.dart';
 import 'networking/models/AllNeededResponse.dart';
 
 class Commons {
@@ -17,6 +18,8 @@ class Commons {
 
  static AllNeededResponse allNeededResponse;
  static Position currentPosition;
+
+  static ProfileDataResponse profileDataResponse;
  static Future<g.Position> getUserLocation() async {
 
 

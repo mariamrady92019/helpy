@@ -453,7 +453,7 @@ class _RegisterState extends State<Register> {
 
         pr.hide().whenComplete(() {
           if (ApiServices.goRegistered) {
-            //USERTOKEN=ApiServices.loginResponse.user_token;
+            Commons.USERTOKEN=ApiServices.registerResponse.user_token;
             //print('user taken is ${ApiServices.loginResponse.user_token}');
             print('navigate');
             pr.hide();
@@ -466,7 +466,7 @@ class _RegisterState extends State<Register> {
             //gologin false
             print('null');
             Toast.show(
-                "sorry${ApiServices.loginResponse.msg}",
+                "sorry${ApiServices.registerResponse.msg}",
                 context,
                 duration: Toast.LENGTH_LONG,
                 gravity: Toast.BOTTOM);

@@ -33,14 +33,14 @@ class _AddNewNeededState extends State<AddNewNeeded> {
 
   //true if man , false if woman
    bool manSelected=false;
-  int gender=0;
+  int gender=1;
   bool buttonManSelected=false;
   bool buttonWomanSelected=false;
-  int adult=0;
+  int adult=1;
 
   List<String> citesList=[] ;
 
-  int mentalStatus=0;
+  int mentalStatus=1;
   File _image;
   final picker = ImagePicker();
 
@@ -48,9 +48,9 @@ class _AddNewNeededState extends State<AddNewNeeded> {
 
   var adultList=['طفل', 'بالغ','مُسن'];
 
-  var genderList=['أنثي', 'ذكر'];
+  var genderList=['انثي', 'ذكر'];
 
-  var mentalList=['  سوي', 'غيرسوي'];
+  var mentalList=['سوي عقليا', 'غير سوي عقليا'];
 
   ProgressDialog pr;
 
@@ -125,7 +125,7 @@ class _AddNewNeededState extends State<AddNewNeeded> {
                           left:0, right: 0, bottom: 12),
                       child: Center(
                         child: ToggleSwitch(
-                          initialLabelIndex: 0,
+                          initialLabelIndex: 1,
                           minWidth:MediaQuery.of(context).size.width*0.8,
                           cornerRadius: 8.0,
                           activeBgColor: Colors.purple,
@@ -212,6 +212,7 @@ class _AddNewNeededState extends State<AddNewNeeded> {
                           child: Center(
 
                             child: ToggleSwitch(
+                              initialLabelIndex: 1,
                               minWidth: 60.0,
                               cornerRadius: 10.0,
                               activeBgColor: Colors.purple,
@@ -236,7 +237,7 @@ class _AddNewNeededState extends State<AddNewNeeded> {
                               left:0, right: 0, bottom: 12),
                           child: Center(
                             child: ToggleSwitch(
-                              initialLabelIndex: 0,
+                              initialLabelIndex: 1,
                               minWidth: 70.0,
                               cornerRadius: 10.0,
                               activeBgColor: Colors.purple,
@@ -373,47 +374,61 @@ class _AddNewNeededState extends State<AddNewNeeded> {
     }
 
   void addNewNedded() {
+    if(_title==null){
+      Toast.show(
+          "من فضلك اذكر احتياج الحالة",
+          context,
+          duration: Toast.LENGTH_LONG,
+          gravity: Toast.BOTTOM);
+      print('msg null');
+      return;
+
+    }
       if(Commons.currentPosition==null){
        getCurrentLocation();}
      String genderr= genderList[gender];
      String adultt = adultList[adult];
      String mental = mentalList[mentalStatus];
+      ApiServices.addNewNeededStatus(Commons.USERTOKEN,_title,genderr,mental,adultt,
+          Commons.currentPosition.latitude,Commons.currentPosition.longitude, _image,description);
      pr = new ProgressDialog(context,
          showLogs: true,
          isDismissible: true);
      pr.style(
          message: 'انتظر من فضلك ...');
-     pr.show();
+      pr.show();
 
      Future.delayed(
          Duration(seconds: 5))
          .then((value) {
-       AddNewModel model = AddNewModel("ملابس", genderr, mental, adultt,Commons.currentPosition.latitude,Commons.currentPosition.longitude, _image,description);
 
-        ApiServices.addNewNeededStatus(Commons.USERTOKEN,"lghfs",genderr,mental,adultt,Commons.currentPosition.latitude,Commons.currentPosition.longitude, _image,description);
-        print("location");
+      // AddNewModel model = AddNewModel("ملابس", genderr, mental, adultt,Commons.currentPosition.latitude,Commons.currentPosition.longitude, _image,description);
 
-      pr.hide().whenComplete(() {
-         if (ApiServices.addNew.status==false) {
-           Toast.show(
-               "من فضلك حاول مرة اخري",
-               context,
-               duration: Toast.LENGTH_LONG,
-               gravity: Toast.BOTTOM);
-           print('msg null');
 
-           pr.hide();}
-         else{
-           Toast.show(
-               "تمت اضافة الحالة",
-               context,
-               duration: Toast.LENGTH_LONG,
-               gravity: Toast.BOTTOM);
-           Navigator.push(
-             context,
-             MaterialPageRoute(builder: (context) =>MoreOptions()),
-           );
-       }});});}
+        pr.hide().whenComplete(() {
+        if (ApiServices.addNew.status==false||ApiServices.addNew==null) {
+        Toast.show(
+        "من فضلك حاول مرة اخري",
+        context,
+        duration: Toast.LENGTH_LONG,
+        gravity: Toast.BOTTOM);
+        print('msg null');
+
+        pr.hide();}
+        else{
+        Toast.show(
+        "تمت اضافة الحالة",
+        context,
+        duration: Toast.LENGTH_LONG,
+        gravity: Toast.BOTTOM);
+        Navigator.pop(context);
+        }});
+        });
+
+
+
+  }
+
 
 
 
