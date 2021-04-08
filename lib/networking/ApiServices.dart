@@ -7,10 +7,12 @@ import 'package:helpy/Commons.dart';
 import 'package:helpy/networking/ProfileDataResponse.dart';
 import 'package:helpy/views/AllNeededHelp.dart';
 import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'models/AddNewModel.dart';
 import 'models/AllNeededResponse.dart';
 import 'models/LoginResponse.dart';
+import 'models/ProfileDataModel.dart';
 import 'models/RegisterResponse.dart';
  import 'package:dio/dio.dart';
 
@@ -104,10 +106,14 @@ import 'models/RegisterResponse.dart';
        }}
        
        static Future<AllNeededResponse> getAllNeededHelp(String userTaken) async{
+         var baseUrl ;
+         // url==null?{baseUrl='$_BASE_URL/v1/marker'}:{baseUrl=url};
+
           userTaken= 'bearer ${Commons.USERTOKEN}';
         //make the request
           var response = await get(
-              '$_BASE_URL/v1/marker',
+              '$_BASE_URL/v1/marker'
+          ,
           headers: <String, String>{
             'Authorization': userTaken
           },);
@@ -183,6 +189,7 @@ import 'models/RegisterResponse.dart';
 
      profileDataResponse = ProfileDataResponse.fromJson(jsonDecode(response.body));
      Commons.profileDataResponse =profileDataResponse;
+     saveProfileToShared(profileDataResponse);
      print(response.body);
      print('geted profile');
      return profileDataResponse;
@@ -200,6 +207,14 @@ import 'models/RegisterResponse.dart';
   Widget build(BuildContext context) {
     // TODO: implement build
    return null;
+  }
+
+  static void saveProfileToShared(ProfileDataResponse user) async{
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool result = await prefs.setString('user', jsonEncode(user));
+    //prefs.s
+    print(result);
   }
 
 

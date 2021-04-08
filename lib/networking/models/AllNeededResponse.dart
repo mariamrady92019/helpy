@@ -1,35 +1,34 @@
 class AllNeededResponse {
   List<Data> data;
-  SLinks links;
-  Meta meta;
+Links links;
+Meta meta;
 
-  AllNeededResponse({this.data, this.links, this.meta});
+AllNeededResponse({this.data, this.links, this.meta});
 
-   AllNeededResponse.fromJson(Map<String, dynamic> json) {
-    if (json['data'] != null) {
-      data = new List<Data>();
-      json['data'].forEach((v) {
-        data.add(new Data.fromJson(v));
-      });
-    }
-    links = json['links'] != null ? new SLinks.fromJson(json['links']) : null;
-    meta = json['meta'] != null ? new Meta.fromJson(json['meta']) : null;
-    //return AllNeededResponse({this.data,this.links,this.meta});
+AllNeededResponse.fromJson(Map<String, dynamic> json) {
+if (json['data'] != null) {
+data = new List<Data>();
+json['data'].forEach((v) {
+data.add(new Data.fromJson(v));
+});
+}
+links = json['links'] != null ? new Links.fromJson(json['links']) : null;
+meta = json['meta'] != null ? new Meta.fromJson(json['meta']) : null;
+}
+
+Map<String, dynamic> toJson() {
+  final Map<String, dynamic> data = new Map<String, dynamic>();
+  if (this.data != null) {
+    data['data'] = this.data.map((v) => v.toJson()).toList();
   }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.data != null) {
-      data['data'] = this.data.map((v) => v.toJson()).toList();
-    }
-    if (this.links != null) {
-      data['links'] = this.links.toJson();
-    }
-    if (this.meta != null) {
-      data['meta'] = this.meta.toJson();
-    }
-    return data;
+  if (this.links != null) {
+    data['links'] = this.links.toJson();
   }
+  if (this.meta != null) {
+    data['meta'] = this.meta.toJson();
+  }
+  return data;
+}
 }
 
 class Data {
@@ -46,23 +45,23 @@ class Data {
   String status;
   String createdAt;
   String updatedAt;
-  SLinks links;
+  NeededLinks links;
 
   Data(
       {this.id,
-      this.user,
-      this.title,
-      this.gender,
-      this.mentalState,
-      this.adult,
-      this.description,
-      this.latitude,
-      this.longitude,
-      this.proof,
-      this.status,
-      this.createdAt,
-      this.updatedAt,
-      this.links});
+        this.user,
+        this.title,
+        this.gender,
+        this.mentalState,
+        this.adult,
+        this.description,
+        this.latitude,
+        this.longitude,
+        this.proof,
+        this.status,
+        this.createdAt,
+        this.updatedAt,
+        this.links});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -78,7 +77,7 @@ class Data {
     status = json['status'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    links = json['links'] != null ? new SLinks.fromJson(json['links']) : null;
+    links = json['links'] != null ? new NeededLinks.fromJson(json['links']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -103,13 +102,13 @@ class Data {
   }
 }
 
-class SLinks {
+class NeededLinks {
   String help;
   String report;
 
-  SLinks({this.help, this.report});
+  NeededLinks({this.help, this.report});
 
-  SLinks.fromJson(Map<String, dynamic> json) {
+  NeededLinks.fromJson(Map<String, dynamic> json) {
     help = json['help'];
     report = json['report'];
   }
@@ -124,9 +123,9 @@ class SLinks {
 
 class Links {
   String first;
-  Null last;
-  Null prev;
-  Null next;
+  String last;
+  String prev;
+  String next;
 
   Links({this.first, this.last, this.prev, this.next});
 

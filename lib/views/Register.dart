@@ -25,7 +25,7 @@ class _RegisterState extends State<Register> {
 
   ProgressDialog pr;
 
-  Future<RegisterResponse> registerResponse;
+ // Future<RegisterResponse> registerResponse;
 
 
 
@@ -366,7 +366,7 @@ class _RegisterState extends State<Register> {
                                                           color: Colors.red)))),
                                           onPressed: () {
                                             // Respond to button press
-                                            register();
+                                            register(context);
                                           },
                                           child: Text(
                                             "انشاء حساب",
@@ -429,17 +429,14 @@ class _RegisterState extends State<Register> {
   }
 
   bool validateForRegister(){
-    if(_fName.trim().isEmpty){
-      return false;
+    if(_fName!=null||_lName!=null||_email!=null||_password!=null||phoneNumber!=null){
+      return true;
     }else{
-      return true ;
+      return false ;
     }
   }
- void register(){
+ void register(context){
     if(validateForRegister()){
-   registerResponse= ApiServices
-          .rigester(_fName,_lName,_email,phoneNumber
-        , _password);
       pr = new ProgressDialog(context,
           showLogs: true,
           isDismissible: true);
@@ -447,44 +444,44 @@ class _RegisterState extends State<Register> {
           message: 'انتظر من فضلك...');
       pr.show();
 
-      Future.delayed(
-          Duration(seconds: 5))
-          .then((value) {
+   ApiServices.rigester(_fName,_lName,_email,phoneNumber
+        , _password).then((value) => {
 
-        pr.hide().whenComplete(() {
           if (ApiServices.goRegistered) {
-            Commons.USERTOKEN=ApiServices.registerResponse.user_token;
+            Commons.USERTOKEN=ApiServices.registerResponse.user_token,
+
+            ApiServices.getProfileData(Commons.USERTOKEN).then((value) => {
             //print('user taken is ${ApiServices.loginResponse.user_token}');
-            print('navigate');
-            pr.hide();
-            Navigator.push(
+              pr.hide(),
+            print('navigate'),
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) =>HomePage()),
-            );
+            )}),
           } else {
             //request  done ok but error massege
             //gologin false
-            print('null');
+            print('null'),
+            pr.hide(),
             Toast.show(
                 "sorry${ApiServices.registerResponse.msg}",
                 context,
                 duration: Toast.LENGTH_LONG,
-                gravity: Toast.BOTTOM);
+                gravity: Toast.BOTTOM,backgroundColor: Colors.indigo)
 
 
-          }
-        });
+
+        }
       });
     }else{
       Toast.show(
           "من فضلك ادخل كل البيانات",
           context,
           duration: Toast.LENGTH_LONG,
-          gravity: Toast.BOTTOM);
+          gravity: Toast.BOTTOM,backgroundColor: Colors.indigo);
 
-    }
+    }}
 
 
- }
  }
 

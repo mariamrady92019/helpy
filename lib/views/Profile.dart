@@ -44,7 +44,7 @@ class _ProfileState extends State<Profile> {
                    Padding(
                      padding: const EdgeInsets.all(8.0),
                      child: Text(
-                         Commons.profileDataResponse.data==null?"null":'${Commons.profileDataResponse.data.fName} ${Commons.profileDataResponse.data.lName}' ,
+                         Commons.profileDataResponse.data==null?"":'${Commons.profileDataResponse.data.fName} ${Commons.profileDataResponse.data.lName}' ,
                          style: TextStyle(color: Commons.textblack,fontFamily: 'Tajawal',fontSize: 18), textDirection: TextDirection.rtl),
                    ),
 

@@ -1,4 +1,7 @@
 
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpy/Commons.dart';
@@ -6,6 +9,8 @@ import 'package:helpy/networking/ApiServices.dart';
 import 'package:helpy/networking/models/AllNeededResponse.dart';
 import 'package:helpy/views/PostNeeded.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:http/http.dart';
+import 'package:pagination_view/pagination_view.dart';
 
 class AllNeededHelp extends StatefulWidget {
   @override
@@ -18,6 +23,13 @@ class _AllNeededHelpState extends State<AllNeededHelp> {
   var all = <PostNeeded>[];
   AllNeededResponse  getData;
   List<Data>allData=<Data>[];
+  List<Data> secondallData=<Data>[];
+
+  AllNeededResponse  secondgetData;
+
+  int page;
+  PaginationViewType paginationViewType;
+  GlobalKey<PaginationViewState> key;
 
   @override
   void initState() {
@@ -25,10 +37,34 @@ class _AllNeededHelpState extends State<AllNeededHelp> {
     super.initState();
 
    allneeded = ApiServices.getAllNeededHelp(Commons.USERTOKEN);
+   allneeded.then((value) =>{
+     getData=value ,
+     allData=value.data
+   } );
 
-   print(allneeded);
+   checkInternetConnectionn();
+    page = -1;
+    paginationViewType = PaginationViewType.listView;
+    key = GlobalKey<PaginationViewState>();
+
+   //print('list++++${Commons.allNeededResponse.links.next}allneeded');
 
 
+  }
+  checkInternetConnectionn()async{
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          Commons.connected =true;
+        });
+      }
+    } on SocketException catch (_) {
+      setState(() {
+        Commons.connected=false;
+      });
+    }
+    // print('iternet $connected');
   }
 
   @override
@@ -44,12 +80,12 @@ class _AllNeededHelpState extends State<AllNeededHelp> {
         backgroundColor: Colors.white,
 
         ),
-      body:
-          Center(
+      body:Commons.connected==false?Center(child: Icon(Icons.wifi_off),):
+         Center(
             child: FutureBuilder<AllNeededResponse>(
               future: allneeded,
               builder: (context, snapshot) {
-                if (snapshot.hasData) {
+                if ( snapshot.hasData) {
                   //get data all posts and links and meta
                   getData=snapshot.data;
                   //alldata list of posts
@@ -127,12 +163,13 @@ class _AllNeededHelpState extends State<AllNeededHelp> {
                   );
                 } else if (snapshot.hasError) {
 
-                  return Text("${snapshot.error}");
+                  return Center(child: Text("من فضلك حاول مرة أخري"));
                 }
                 return CircularProgressIndicator();
               },
             ),
           ),
+
 
 
     );
@@ -145,4 +182,38 @@ class _AllNeededHelpState extends State<AllNeededHelp> {
        });
        return all;
   }
-}
+
+  Future<List<Data>> pageFetch(int currentListSize)async{
+   final String _BASE_URL = 'http://dsc-helpy.herokuapp.com/api';
+
+    if( false){
+      secondgetData=null;
+      return secondallData;
+    }else{
+     var response = await get(
+       '$_BASE_URL/v1/marker'
+       ,
+       headers: <String, String>{
+         'Authorization': Commons.USERTOKEN
+       },);
+
+     if(response.statusCode==200){
+
+       secondgetData= AllNeededResponse.fromJson(jsonDecode(response.body));
+       Commons.allNeededResponse=secondgetData;
+       print(response.body);
+       print('second success ok');
+       return secondgetData.data;
+
+     }else{
+       print('didnt ok');
+       return null;
+     }
+
+      }
+
+
+   }
+
+  }
+

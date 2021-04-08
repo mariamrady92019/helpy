@@ -2,10 +2,12 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:helpy/main.dart';
 import 'package:helpy/networking/ApiServices.dart';
 import 'package:helpy/networking/models/LoginResponse.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 
 import '../Commons.dart';
@@ -107,8 +109,14 @@ class _LoginState extends State<Login> {
                                   padding: const EdgeInsets.only(
                                       left: 15, right: 15, bottom: 15),
                                   child: Container(
-                                    child: TextField(
+                                    child: TextFormField(
                                       textDirection: TextDirection.rtl,
+                                      validator: (value) {
+                                        if(!value.contains("@")||value==null){
+                                          return"ادخل ايميل صحيح";
+                                        }
+                                      },
+
                                       decoration: new InputDecoration(
                                         isDense: true,
                                         contentPadding: EdgeInsets.all(17),
@@ -202,59 +210,35 @@ class _LoginState extends State<Login> {
                                                 validate(_email, _password);
                                             print(
                                                 '$valided is rwesult of validation');
-                                            if (valided) {
-                                              _loginResponse = ApiServices
-                                                  .loginByEmailAndPassword(
-                                                  _email, _password);
-                                              pr = new ProgressDialog(context,
-                                                  showLogs: true,
-                                                  isDismissible: true);
-                                              pr.style(
-                                                  message: 'Please wait...');
-                                              pr.show();
+                                            if (Commons.connected) {
+                                              if (valided) {
+                                                pr = new ProgressDialog(context,
+                                                    showLogs: true,
+                                                    isDismissible: true);
+                                                pr.style(
+                                                    message: 'من فضلك انتظر');
+                                                pr.show();
 
-                                              Future.delayed(
-                                                      Duration(seconds: 6))
-                                                  .then((value) {
+                                               // _loginResponse =
+                                                    ApiServices
+                                                        .loginByEmailAndPassword(
+                                                            _email, _password)
+                                                    .then((value) =>login());
 
-                                                pr.hide().whenComplete(() {
-                                                  if (ApiServices.goLogin) {
-                                                    Commons.USERTOKEN=ApiServices.loginResponse.user_token;
-                                                     print('user taken is ${ApiServices.loginResponse.user_token}');
-                                                    print('navigate');
-                                                    pr.hide();
-                                                     Navigator.push(
-                                                       context,
-                                                       MaterialPageRoute(builder: (context) =>HomePage()),
-                                                     );
-                                                  } else {
-                                                    //request  done ok but error massege
-                                                    //gologin false
-                                                    print('null');
-                                                  if(ApiServices.loginResponse.msg==null) {
-                                                     Toast.show(
-                                                        "حاول مرة اخري",
-                                                        context,
-                                                        duration: Toast.LENGTH_LONG,
-                                                        gravity: Toast.BOTTOM);}else{
-                                                    Toast.show(
-                                                  ApiServices.loginResponse.msg,
-                                                            context,
-                                              duration: Toast.LENGTH_LONG,
-                                                         gravity: Toast.BOTTOM);}
-
-
-                                                  }
-                                                });
-                                              });
-                                            }
-
-
-                                            else {
-                                              print(
-                                                  '$valided is rwesult of validation');
+                                              } else {
+                                                print(
+                                                    '$valided is rwesult of validation');
+                                                Toast.show(
+                                                    "please correct mail and password",
+                                                    context,
+                                                    duration: Toast.LENGTH_LONG,
+                                                    gravity: Toast.BOTTOM
+                                                ,backgroundColor: Colors.indigo
+                                                );
+                                              }
+                                            } else {
                                               Toast.show(
-                                                  "please correct mail and password",
+                                                  "من فضلك اتصل بالانترنت",
                                                   context,
                                                   duration: Toast.LENGTH_LONG,
                                                   gravity: Toast.BOTTOM);
@@ -313,7 +297,9 @@ class _LoginState extends State<Login> {
                                         onTap: () {
                                           Navigator.push(
                                             context,
-                                            MaterialPageRoute(builder: (context) =>Register()),
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    Register()),
                                           );
                                         },
                                       ),
@@ -335,10 +321,62 @@ class _LoginState extends State<Login> {
   }
 
   bool validate(email, password) {
+    String v = validation();
     if (email != null && password != null) {
       return true;
-    } else {
+    } else if(v.isEmpty==false) {
+      Toast.show(validation(), context);
       return false;
+
+    }
+  }
+
+
+  void login() {
+    /* Future.delayed(
+        Duration(seconds: 6))
+        .then((value) {*/
+
+
+    if (ApiServices.goLogin) {
+      Commons.USERTOKEN = ApiServices.loginResponse.user_token;
+      ApiServices.getProfileData( Commons.USERTOKEN ).then((value) => {
+      print('user taken is ${ApiServices.loginResponse.user_token}'),
+
+      print('navigate'),
+      pr.hide(),
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      )});
+    } else {
+      //request  done ok but error massege
+      //gologin false
+      print('null');
+      pr.hide();
+
+      if (ApiServices.loginResponse.msg == null) {
+        Toast.show("حاول مرة اخري", context,
+            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+      } else {
+        pr.hide();
+
+        Toast.show(ApiServices.loginResponse.msg, context,
+            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+      }
+    }
+  }
+
+  String validation() {
+    if(_password.toString().length<6){
+      return "لابد ان يكون اكثر من6أحرف";
+    }
+    if(_password==null){
+      return"ادخل الباسورد";
+    }
+    if(!(_email.toString().contains("@")))
+    {
+      return"ادخل ايميلا صحيحا";
     }
   }
 }

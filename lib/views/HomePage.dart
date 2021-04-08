@@ -9,6 +9,7 @@ import 'package:helpy/views/AddNewNeeded.dart';
 import 'package:helpy/views/Login.dart';
 import 'package:helpy/views/MoreOptions.dart';
 import 'package:helpy/views/Register.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'AllNeededHelp.dart';
 import 'MapPage.dart';
@@ -51,12 +52,19 @@ List<Widget> pages=<Widget>[
   void initState() {
     // TODO: implement initState
     super.initState();
-    getProfilData();
+    //getProfilData();
     getCurrentLocation();
-
-
+    initialShared();
   }
 
+  initialShared()async{
+    final prefs= await SharedPreferences.getInstance();
+    prefs.setBool('logined', true);
+    prefs.setString('userTaken', Commons.USERTOKEN);
+
+    print('loooogined   in shared');
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -124,9 +132,7 @@ List<Widget> pages=<Widget>[
 
   }
 
-  void getProfilData() {
-      ApiServices.getProfileData(Commons.USERTOKEN);
-  }
+
 
   void getCurrentLocation() {
     Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation)

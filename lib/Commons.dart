@@ -4,7 +4,10 @@ import 'package:geolocator/geolocator.dart' as g;
 import 'package:geolocator/geolocator.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import 'networking/ApiServices.dart';
 import 'networking/ProfileDataResponse.dart';
 import 'networking/models/AllNeededResponse.dart';
 
@@ -18,16 +21,14 @@ class Commons {
 
  static AllNeededResponse allNeededResponse;
  static Position currentPosition;
+ static ProfileDataResponse profileDataResponse;
+ static bool connected=false;
 
-  static ProfileDataResponse profileDataResponse;
- static Future<g.Position> getUserLocation() async {
 
 
-  /// Determine the current position of the device.
-  ///
-  /// When the location services are not enabled or permissions
-  /// are denied the `Future` will return an error.
 
+ static void getProfiledata() {
+  ApiServices.getProfileData(Commons.USERTOKEN);
  }
 
  String convertDateToForm(String createdAt) {

@@ -144,24 +144,6 @@ class _AddNewNeededState extends State<AddNewNeeded> {
                         ),
                       ),
                     ),
-                    Text("اختر البلد-المدينة",style: TextStyle(color: Commons.textblack,fontFamily: 'Tajawal',fontSize: 18), textDirection: TextDirection.rtl),
-
-                    Padding(
-                      padding: const EdgeInsets.only(
-                         top:15, left: 15, right: 15, bottom: 15),
-                      child: Container(
-                        height: MediaQuery.of(context).size.height/15,
-                        child: DropdownSearch<String>(
-                            mode: Mode.MENU,
-                            showSelectedItem: true,
-                            items:citesList,
-                            label: "البلد",
-                            hint: "country in menu mode",
-                            popupItemDisabled: (String s) => s.startsWith('I'),
-                            onChanged: print,
-                            selectedItem: "القاهرة"),
-                      ),
-                    ),
                     Text("وصف الحالة",style: TextStyle(color: Commons.textblack,fontFamily: 'Tajawal',fontSize: 18), textDirection: TextDirection.rtl),
                     Padding(
                       padding: const EdgeInsets.only(
@@ -384,12 +366,53 @@ class _AddNewNeededState extends State<AddNewNeeded> {
       return;
 
     }
+    else if(description==null){
+      Toast.show(
+          "من فضلك اذكر وصف الحالة",
+          context,
+          duration: Toast.LENGTH_LONG,
+          gravity: Toast.BOTTOM);
+      print('msg null');
+      return;
+
+    }
+    else if(_title.length<10){
+      Toast.show(
+          "احتياج الحالة لا يقل عن عشر حروف",
+          context,
+          duration: Toast.LENGTH_LONG,
+          gravity: Toast.BOTTOM);
+      print('msg null');
+      return;
+    }else if(description.length<50){
+      Toast.show(
+          "احتياج الحالة لا يقل عن عشر حروف",
+          context,
+          duration: Toast.LENGTH_LONG,
+          gravity: Toast.BOTTOM);
+      print('msg null');
+      return;
+    }
       if(Commons.currentPosition==null){
        getCurrentLocation();}
      String genderr= genderList[gender];
      String adultt = adultList[adult];
      String mental = mentalList[mentalStatus];
-      ApiServices.addNewNeededStatus(Commons.USERTOKEN,_title,genderr,mental,adultt,
+     //-------
+    pr = new ProgressDialog(context,
+        showLogs: true,
+        isDismissible: true);
+    pr.style(
+        message: 'انتظر من فضلك ...');
+    pr.show();
+    ApiServices.addNewNeededStatus(Commons.USERTOKEN,_title,genderr,mental,adultt,
+        Commons.currentPosition.latitude,Commons.currentPosition.longitude, _image,description)
+        .then((value) => add(value));
+
+
+
+
+     /* ApiServices.addNewNeededStatus(Commons.USERTOKEN,_title,genderr,mental,adultt,
           Commons.currentPosition.latitude,Commons.currentPosition.longitude, _image,description);
      pr = new ProgressDialog(context,
          showLogs: true,
@@ -423,7 +446,7 @@ class _AddNewNeededState extends State<AddNewNeeded> {
         gravity: Toast.BOTTOM);
         Navigator.pop(context);
         }});
-        });
+        });*/
 
 
 
@@ -443,6 +466,28 @@ class _AddNewNeededState extends State<AddNewNeeded> {
 
       });
      });}
+
+  add(var value) {
+    pr.hide();
+      if (ApiServices.addNew.status==false||ApiServices.addNew==null) {
+        Toast.show(
+            "من فضلك حاول مرة اخري",
+            context,
+            duration: Toast.LENGTH_LONG,
+            gravity: Toast.BOTTOM);
+        print('msg null');
+
+        pr.hide();}
+      else{
+        Toast.show(
+            "تمت اضافة الحالة",
+            context,
+            duration: Toast.LENGTH_LONG,
+            gravity: Toast.BOTTOM);
+        Navigator.pop(context);
+      }
+
+  }
 
 
 
