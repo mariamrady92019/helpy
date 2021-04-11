@@ -33,7 +33,8 @@ class _HomePageState extends State<HomePage> {
   GlobalKey _bottomNavigationKey = GlobalKey();
 List<Widget> pages=<Widget>[
   //0 index is more page
-    MoreOptions(),
+  MoreOptions(),
+
   //1 index is profile page
     Profile(),
   //2 index is add new
@@ -84,18 +85,49 @@ List<Widget> pages=<Widget>[
               items: <Widget>[
 
 
-                    Icon(Icons.menu, size: 30),
+                    InkWell(
+                        child: Icon(Icons.menu, size: 30)
+                    ,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) =>MoreOptions()),
+                        );
+                      },
+                    ),
 
 
-                    Icon(Icons.person, size: 30),
+                    InkWell(
+
+                        child: Icon(Icons.person, size: 30)
+                    ,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) =>Profile()),
+                        );
+                      },
 
 
-                Icon(Icons.article_outlined, size: 30),
+                    ),
+
+
+
+                Icon(Icons.article_outlined, size: 30)
+                ,
+
 
                    // Text("اضافة حالة")
-
-
-                    Icon(Icons.map, size: 30),
+                InkWell(
+                        child: Icon(Icons.map, size: 30)
+                    ,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) =>MapPage()),
+                        );
+                      },
+                    ),
                     //Text("الخريطة")
                 InkWell(
                     onTap: () {

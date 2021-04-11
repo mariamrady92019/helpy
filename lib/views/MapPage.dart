@@ -128,7 +128,7 @@ class _MapPageState extends State<MapPage> {
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
 
-                                    Text(data.title, style: TextStyle(color: Commons.textblack,
+                                    Text(data.title,overflow: TextOverflow.fade, style: TextStyle(color: Commons.textblack,
                                         fontSize: 18,
                                         fontFamily: 'Tajawal'),),
                                     Padding(

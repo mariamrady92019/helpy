@@ -386,7 +386,7 @@ class _AddNewNeededState extends State<AddNewNeeded> {
       return;
     }else if(description.length<50){
       Toast.show(
-          "احتياج الحالة لا يقل عن عشر حروف",
+          "وصف الحالة من فضلك",
           context,
           duration: Toast.LENGTH_LONG,
           gravity: Toast.BOTTOM);
@@ -399,15 +399,9 @@ class _AddNewNeededState extends State<AddNewNeeded> {
      String adultt = adultList[adult];
      String mental = mentalList[mentalStatus];
      //-------
-    pr = new ProgressDialog(context,
-        showLogs: true,
-        isDismissible: true);
-    pr.style(
-        message: 'انتظر من فضلك ...');
-    pr.show();
-    ApiServices.addNewNeededStatus(Commons.USERTOKEN,_title,genderr,mental,adultt,
-        Commons.currentPosition.latitude,Commons.currentPosition.longitude, _image,description)
-        .then((value) => add(value));
+
+    showConfirmDialog(genderr,mental,adultt);
+
 
 
 
@@ -489,8 +483,58 @@ class _AddNewNeededState extends State<AddNewNeeded> {
 
   }
 
+  void showConfirmDialog(genderr,mental , adult)async {
+      return showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+
+            title: Text('تذكير',style: TextStyle(color: Colors.black,fontFamily: 'Tajawal',fontWeight: FontWeight.bold)),
+            content: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  Text('من فضلك نحتاج لموقعك الحالي لرفع الحالة',style: TextStyle(color: Colors.black54,fontFamily: 'Tajawal',fontWeight: FontWeight.normal),),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Confirm'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  print('Confirmed');
+                 // Navigator.of(context).pop();
+                  pr = new ProgressDialog(context,
+                      showLogs: true,
+                      isDismissible: true);
+                  pr.style(
+                      message: 'انتظر من فضلك ...');
+                  pr.show();
+                  ApiServices.addNewNeededStatus(Commons.USERTOKEN,_title,genderr,mental,adult,
+                       Commons.currentPosition.latitude,Commons.currentPosition.longitude, _image,description)
+                      .then((value) => add(value));
+                },
+              ),
+              TextButton(
+                child: Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
 
 
 
 
-}
+
+  }
+
+
+
+
+

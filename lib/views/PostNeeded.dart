@@ -1,3 +1,4 @@
+
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -6,9 +7,12 @@ import 'package:helpy/Commons.dart';
 import 'package:helpy/networking/models/AllNeededResponse.dart';
 import 'package:helpy/views/NeededPostDetails.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoder/geocoder.dart';
 //import 'package:intl/intl.dart';
 
 import 'HomePage.dart';
+
 
 class PostNeeded extends StatelessWidget {
  // final Data dataObject;
@@ -17,7 +21,10 @@ class PostNeeded extends StatelessWidget {
 
 final Data dataObject ;
 
-  const PostNeeded( {Key key,@required this.dataObject}) : super(key: key);
+   PostNeeded( {Key key,@required this.dataObject}) : super(key: key);
+
+
+
 
 
   @override
@@ -77,7 +84,7 @@ final Data dataObject ;
                             textDirection: TextDirection.rtl,
                             child: Container(
                               width: MediaQuery.of(context).size.width*0.4,
-                              child: Text(dataObject==null?"":dataObject.title, style: TextStyle(color: Commons.textblack,
+                              child: Text(dataObject==null?"":dataObject.title,overflow: TextOverflow.fade, style: TextStyle(color: Commons.textblack,
                                   fontSize: 18,
                                   fontFamily: 'Tajawal'),),
                             ),
@@ -86,7 +93,7 @@ final Data dataObject ;
                             padding: const EdgeInsets.only(left:40.0),
                             child: Row(
                               children: [
-                                Text("cairo", style: TextStyle(
+                                Text(location==null?"cairo":location.featureName, style: TextStyle(
                                     color: Commons.textHintColr,
                                     fontSize:18,
                                     fontFamily: 'Tajawal'),),
@@ -167,4 +174,17 @@ final Data dataObject ;
   }
 
   void helpThisNeededone() {}
+var location ;
+  getAdressDEtails()async{
+    var addresses;
+
+    final coordinates = new Coordinates(double.parse(dataObject.latitude), double.parse(dataObject.longitude));
+    addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates).then((value) => {
+    location = addresses.first,
+    });
+
+    print("${location.featureName} : ${location.addressLine}");
+  }
+
+
 }

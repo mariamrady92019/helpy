@@ -33,24 +33,10 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     readShared();
     readProfileData();
-    checkInternetConnectionn();
+    Commons.checkInternetConnectionn();
 
   }
- checkInternetConnectionn()async{
-   try {
-     final result = await InternetAddress.lookup('google.com');
-     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-       setState(() {
-         Commons.connected =true;
-       });
-     }
-   } on SocketException catch (_) {
-     setState(() {
-       Commons.connected=false;
-     });
-   }
-   // print('iternet $connected');
- }
+
 
 
 

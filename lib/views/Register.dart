@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:helpy/Commons.dart';
 import 'package:helpy/networking/ApiServices.dart';
 import 'package:helpy/networking/models/LoginResponse.dart';
@@ -25,7 +26,16 @@ class _RegisterState extends State<Register> {
 
   ProgressDialog pr;
 
+  var validatedString;
+
  // Future<RegisterResponse> registerResponse;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Commons.checkInternetConnectionn();
+  }
 
 
 
@@ -219,6 +229,7 @@ class _RegisterState extends State<Register> {
                                   child: Container(
                                     child: TextField(
                                       textDirection: TextDirection.rtl,
+                                      keyboardType:TextInputType.phone ,
                                       decoration: new InputDecoration(
                                         isDense: true,
                                         contentPadding: EdgeInsets.all(17),
@@ -271,6 +282,7 @@ class _RegisterState extends State<Register> {
                                   child: Container(
                                     child: TextField(
                                       textDirection: TextDirection.rtl,
+                                      keyboardType: TextInputType.emailAddress,
                                       decoration: new InputDecoration(
                                         isDense: true,
                                         contentPadding: EdgeInsets.all(17),
@@ -429,58 +441,95 @@ class _RegisterState extends State<Register> {
   }
 
   bool validateForRegister(){
-    if(_fName!=null||_lName!=null||_email!=null||_password!=null||phoneNumber!=null){
+    if(_fName!=null&&_lName!=null&&_email!=null&&_password!=null&&phoneNumber!=null&&_fName.isNotEmpty&&_lName.isNotEmpty&&
+    _email.isNotEmpty&&_password.isNotEmpty&&phoneNumber.isNotEmpty
+    ){
+      validatedString  = validation();
       return true;
     }else{
       return false ;
     }
   }
  void register(context){
-    if(validateForRegister()){
-      pr = new ProgressDialog(context,
-          showLogs: true,
-          isDismissible: true);
-      pr.style(
-          message: 'انتظر من فضلك...');
-      pr.show();
+    Commons.checkInternetConnectionn().then((value) => {
+    if(Commons.connected){
+        if(validateForRegister()){
+   pr = new ProgressDialog(context,
+   showLogs: true,
+   isDismissible: true),
+   pr.style(
+   message: 'انتظر من فضلك...'),
+   pr.show(),
 
    ApiServices.rigester(_fName,_lName,_email,phoneNumber
-        , _password).then((value) => {
+   , _password).then((value) => {
 
-          if (ApiServices.goRegistered) {
-            Commons.USERTOKEN=ApiServices.registerResponse.user_token,
+   if (ApiServices.goRegistered) {
+   Commons.USERTOKEN=ApiServices.registerResponse.user_token,
 
-            ApiServices.getProfileData(Commons.USERTOKEN).then((value) => {
-            //print('user taken is ${ApiServices.loginResponse.user_token}');
-              pr.hide(),
-            print('navigate'),
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) =>HomePage()),
-            )}),
-          } else {
-            //request  done ok but error massege
-            //gologin false
-            print('null'),
-            pr.hide(),
-            Toast.show(
-                "sorry${ApiServices.registerResponse.msg}",
-                context,
-                duration: Toast.LENGTH_LONG,
-                gravity: Toast.BOTTOM,backgroundColor: Colors.indigo)
+   ApiServices.getProfileData(Commons.USERTOKEN).then((value) => {
+   //print('user taken is ${ApiServices.loginResponse.user_token}');
+   pr.hide(),
+   print('navigate'),
+   Navigator.pushReplacement(
+   context,
+   MaterialPageRoute(builder: (context) =>HomePage()),
+   )}),
+   } else {
+   //request  done ok but error massege
+   //gologin false
+   print('null'),
+   pr.hide(),
+   Toast.show(
+   "sorry${ApiServices.registerResponse.msg}",
+   context,
+   duration: Toast.LENGTH_LONG,
+   gravity: Toast.BOTTOM,backgroundColor: Colors.indigo)
 
 
 
-        }
-      });
-    }else{
-      Toast.show(
-          "من فضلك ادخل كل البيانات",
-          context,
-          duration: Toast.LENGTH_LONG,
-          gravity: Toast.BOTTOM,backgroundColor: Colors.indigo);
+   }
+   }),
+   }else if(!validateForRegister()&&validatedString==null) {
+   Toast.show(
+   "من فضلك ادخل كل البيانات",
+   context,
+   duration: Toast.LENGTH_LONG,
+   gravity: Toast.BOTTOM, backgroundColor: Colors.indigo),
+   }else{
+   Toast.show(
+   validatedString,
+   context,
+   duration: Toast.LENGTH_LONG,
+   gravity: Toast.BOTTOM, backgroundColor: Colors.indigo),
+   }
+   }else{
+   Toast.show(
+   "من فضلك اتصل بالانترنت",
+   context,
+   duration: Toast.LENGTH_LONG,
+   gravity: Toast.BOTTOM,),
+   }
+    });
 
-    }}
+
+  }
+
+  validation() {
+    if(!(_email.contains("@")))
+    {
+      return"ادخل ايميلا صحيحا";
+    }
+    if(_password.length<6){
+      return "لابد ان يكون الباسورد اكثر من6أحرف";
+    }
+    if(phoneNumber.length<12){
+      return "لابد ان يكون رقم الهاتف صحيحا";
+    }
+
+
+    return null;
+  }
 
 
  }

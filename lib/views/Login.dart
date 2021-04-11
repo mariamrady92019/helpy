@@ -22,13 +22,24 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   var _email;
   var _password;
-  bool valided;
+ bool valided;
   bool isLoading = false;
+
+
 
   Future<LoginResponse> _loginResponse;
   final key = GlobalKey<ScaffoldState>();
   ProgressDialog pr;
   double percentage = 0.0;
+
+  String validatedString;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+   Commons.checkInternetConnectionn();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -206,43 +217,54 @@ class _LoginState extends State<Login> {
                                                           color: Colors.red)))),
                                           onPressed: () {
                                             // Respond to button press
-                                            valided =
-                                                validate(_email, _password);
-                                            print(
-                                                '$valided is rwesult of validation');
+                                            Commons.checkInternetConnectionn().then((value) => {
+                                            valided = validate(_email, _password),
+                                                print(
+                                                '$valided is rwesult of validation'),
                                             if (Commons.connected) {
                                               if (valided) {
                                                 pr = new ProgressDialog(context,
                                                     showLogs: true,
-                                                    isDismissible: true);
+                                                    isDismissible: true),
                                                 pr.style(
-                                                    message: 'من فضلك انتظر');
-                                                pr.show();
+                                                    message: '...من فضلك انتظر'),
+                                                pr.show(),
 
-                                               // _loginResponse =
-                                                    ApiServices
-                                                        .loginByEmailAndPassword(
-                                                            _email, _password)
-                                                    .then((value) =>login());
+                                                // _loginResponse =
+                                                ApiServices
+                                                    .loginByEmailAndPassword(
+                                                    _email, _password)
+                                                    .then((value) =>login()),
 
-                                              } else {
+                                              } else if (!valided&&validatedString==null){
                                                 print(
-                                                    '$valided is rwesult of validation');
+                                                    '$valided is rwesult of validation'),
                                                 Toast.show(
-                                                    "please correct mail and password",
+                                                    "من فضلك ادخل البيانات",
                                                     context,
                                                     duration: Toast.LENGTH_LONG,
                                                     gravity: Toast.BOTTOM
-                                                ,backgroundColor: Colors.indigo
-                                                );
+                                                    ,backgroundColor: Colors.indigo
+                                                ),
+                                              }else{
+                                                Toast.show(
+                                                    validatedString,
+                                                    context,
+                                                    duration: Toast.LENGTH_LONG,
+                                                    gravity: Toast.BOTTOM
+                                                    ,backgroundColor: Colors.indigo
+                                                ),
                                               }
                                             } else {
                                               Toast.show(
                                                   "من فضلك اتصل بالانترنت",
                                                   context,
                                                   duration: Toast.LENGTH_LONG,
-                                                  gravity: Toast.BOTTOM);
+                                                  gravity: Toast.BOTTOM),
                                             }
+
+                                            });
+
                                             /*Navigator.of(context).push(CupertinoPageRoute(
                                             builder: (BuildContext context) => HomePage()));*/
                                           },
@@ -321,14 +343,17 @@ class _LoginState extends State<Login> {
   }
 
   bool validate(email, password) {
-    String v = validation();
-    if (email != null && password != null) {
-      return true;
-    } else if(v.isEmpty==false) {
-      Toast.show(validation(), context);
-      return false;
 
+    if (email != null && password != null&&email.toString().isNotEmpty&&email.toString().isNotEmpty) {
+     validatedString  = validation(email , password);
+          if(validatedString!=null){
+           // Toast.show(validatedString, context);
+            return false;
+          }
+
+      return true;
     }
+    return false ;
   }
 
 
@@ -367,16 +392,16 @@ class _LoginState extends State<Login> {
     }
   }
 
-  String validation() {
-    if(_password.toString().length<6){
-      return "لابد ان يكون اكثر من6أحرف";
-    }
-    if(_password==null){
-      return"ادخل الباسورد";
-    }
-    if(!(_email.toString().contains("@")))
+  String validation(email , password) {
+    if(!(email.contains("@")))
     {
       return"ادخل ايميلا صحيحا";
     }
+  if(password.length<6){
+      return "لابد ان يكون الباسورد اكثر من6أحرف";
+    }
+
+
+    return null;
   }
 }

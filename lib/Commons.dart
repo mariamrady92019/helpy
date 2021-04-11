@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart' as g;
 import 'package:geolocator/geolocator.dart';
@@ -25,7 +27,22 @@ class Commons {
  static bool connected=false;
 
 
+ static Future<bool> checkInternetConnectionn()async{
+  try {
+   final result = await InternetAddress.lookup('google.com');
+   if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
 
+     Commons.connected =true;
+
+
+   }
+  } on SocketException catch (_) {
+
+    Commons.connected=false;
+
+  }
+  // print('iternet $connected');
+ }
 
  static void getProfiledata() {
   ApiServices.getProfileData(Commons.USERTOKEN);

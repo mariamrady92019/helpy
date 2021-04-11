@@ -161,7 +161,7 @@ class _AllNeededHelpState extends State<AllNeededHelp> {
                       ],
                     ),
                   );
-                } else if (snapshot.hasError) {
+                } else if (snapshot.hasError||allData==null) {
 
                   return Center(child: Text("من فضلك حاول مرة أخري"));
                 }

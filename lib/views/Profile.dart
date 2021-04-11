@@ -23,6 +23,7 @@ class _ProfileState extends State<Profile> {
        textDirection:TextDirection.rtl,
        child: Container(
          height: MediaQuery.of(context).size.height,
+         color: Colors.white,
          child: Column(
          crossAxisAlignment: CrossAxisAlignment.start,
            children: [
