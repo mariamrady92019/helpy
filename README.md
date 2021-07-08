@@ -56,8 +56,7 @@ it is review for your Data
  ## AS SOON As :
  *we will handle some points
  *add new features
- ## NOW ! you can try our Demo App .. download apk file from drive and it  will be installed
- https://drive.google.com/drive/folders/1O6NZj6iw1lIRwyxvOnaPohHdyZDUyHXI?usp=sharing
+ 
  
  
  
