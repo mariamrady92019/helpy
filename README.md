@@ -52,13 +52,13 @@ if you click any marker it goes from down With its Details :D
 
 ## 8.[Add New Needed Status]:
 if you go here you can add new one by its title , description , gender, mental_state,adult or not & photo for it if and only if Status accept.
-<img align="center" width="450" height="900" src="https://user-images.githubusercontent.com/55314273/112935386-f4179080-9123-11eb-84a0-bab6aa4aca88.jpg">
+<img align="right" width="450" height="900" src="https://user-images.githubusercontent.com/55314273/112935386-f4179080-9123-11eb-84a0-bab6aa4aca88.jpg">
 <img align="center" width="450" height="900" src="https://user-images.githubusercontent.com/55314273/112935426-085b8d80-9124-11eb-9800-a0319b65bbbc.jpg">
 
 
 ## 9.[Profile Screen]:
 it is review for your Data 
-<img align="center" width="450" height="900" src="https://user-images.githubusercontent.com/55314273/112935450-190c0380-9124-11eb-8b11-f714e88c325e.jpg">
+<img align="right" width="450" height="900" src="https://user-images.githubusercontent.com/55314273/112935450-190c0380-9124-11eb-8b11-f714e88c325e.jpg">
 
 
 ## 10.[More OPtionScreen]:
