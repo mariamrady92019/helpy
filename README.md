@@ -38,7 +38,7 @@ Now once you logined or registerd you go to Home and Asked For Location Permessi
 after respond with location permission
 ## 5.[Each Needed Details]:
 if you click one item if list you will be here !
-<img align="center" width="450" height="900" src="https://user-images.githubusercontent.com/55314273/112934428-0b557e80-9122-11eb-9ee9-148a5bda5846.jpg">
+<img align="right" width="450" height="900" src="https://user-images.githubusercontent.com/55314273/112934428-0b557e80-9122-11eb-9ee9-148a5bda5846.jpg">
 
 
 ## 6.[Map Screen]:
