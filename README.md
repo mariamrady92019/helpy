@@ -23,7 +23,7 @@ Now! In one Click
 ## 1.[Login Screen]:
 allow user wich Registered to login and Aouthntecated 
 <p align="center">
-  <img width="460" height="300" src="https://user-images.githubusercontent.com/55314273/112933106-781b4980-911f-11eb-9c3c-9df54628a168.jpg">
+  <img width="460" height="900" src="https://user-images.githubusercontent.com/55314273/112933106-781b4980-911f-11eb-9c3c-9df54628a168.jpg">
 </p>
 
 ## 2. [Register Screen]
