@@ -58,7 +58,7 @@ if you go here you can add new one by its title , description , gender, mental_s
 
 ## 9.[Profile Screen]:
 it is review for your Data 
-<img align="right" width="450" height="900" src="https://user-images.githubusercontent.com/55314273/112935450-190c0380-9124-11eb-8b11-f714e88c325e.jpg">
+<img align="centert" width="450" height="900" src="https://user-images.githubusercontent.com/55314273/112935450-190c0380-9124-11eb-8b11-f714e88c325e.jpg">
 
 
 ## 10.[More OPtionScreen]:
